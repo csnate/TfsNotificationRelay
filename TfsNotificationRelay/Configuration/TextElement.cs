@@ -251,7 +251,11 @@ namespace DevCore.TfsNotificationRelay.Configuration
         {
             get { return (string)this["reactivated"]; }
         }
-        
-        
+
+        [ConfigurationProperty("shelvesetcodereview")]
+        public string ShelvesetCodeReview
+        {
+            get { return (string) this["shelvesetcodereview"]; }
+        }
     }
 }
