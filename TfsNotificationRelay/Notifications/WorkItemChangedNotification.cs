@@ -69,8 +69,11 @@ namespace DevCore.TfsNotificationRelay.Notifications
                 Action = FormatAction(bot)
             };
             lines.Add(bot.Text.WorkItemchangedFormat.FormatWith(formatter));
-            lines.Add(String.Format("State: {0}", State));
-            lines.Add(String.Format("AssignedTo: {0} ", AssignedTo));
+            if (!IsCodeReviewRequest)
+            {
+                lines.Add(String.Format("State: {0}", State));
+                lines.Add(String.Format("AssignedTo: {0} ", AssignedTo));
+            }
 
             return lines;
         }
@@ -80,7 +83,7 @@ namespace DevCore.TfsNotificationRelay.Notifications
             var rule = eventRules.FirstOrDefault(r =>
                 (r.Events.HasFlag(TfsEvents.WorkItemStateChange) && IsStateChanged
                 || r.Events.HasFlag(TfsEvents.WorkItemAssignmentChange) && IsAssignmentChanged
-                || r.Events.HasFlag(TfsEvents.WorkItemCodeReviewRequested) && IsCodeReviewRequest)
+                || r.Events.HasFlag(TfsEvents.WorkItemCodeReviewRequested) && IsCodeReviewRequest && IsNew)
                 && collection.IsMatchOrNoPattern(r.TeamProjectCollection)
                 && ProjectName.IsMatchOrNoPattern(r.TeamProject)
                 && AreaPath.IsMatchOrNoPattern(r.TeamAreaPath));
