@@ -64,10 +64,15 @@ namespace DevCore.TfsNotificationRelay.Slack
         public Message ToSlackMessage(WorkItemChangedNotification notification, BotElement bot, string channel)
         {
             string header = notification.ToMessage(bot, s => s).First();
-            var fields = new[] { 
-                new AttachmentField(bot.Text.State, notification.State, true), 
-                new AttachmentField(bot.Text.AssignedTo, notification.AssignedTo, true) 
-            };
+            AttachmentField[] fields = null;
+            if (!notification.IsCodeReviewRequest)
+            {
+                fields = new[]
+                {
+                    new AttachmentField(bot.Text.State, notification.State, true),
+                    new AttachmentField(bot.Text.AssignedTo, notification.AssignedTo, true)
+                };
+            }
 
             return SlackHelper.CreateSlackMessage(header, fields, bot, channel, bot.GetSetting("standardColor"));
         }
